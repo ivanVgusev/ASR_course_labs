@@ -10,7 +10,11 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(collapse_path(['blank', 'b', 'b', 'blank', 'a', 'a']), 'ba')
 
     def test_paths(self):
-        rows = [{'blank': .1, 'b': .8, 'a': .1}, {'blank': .2, 'b': .3, 'a': .5}, {'blank': .2, 'b': .1, 'a': .7}]
+        rows = [
+            {'blank': .1, 'b': .8, 'a': .1}, 
+            {'blank': .2, 'b': .3, 'a': .5}, 
+            {'blank': .2, 'b': .1, 'a': .7}
+        ]
         records = enumerate_paths(rows, ['blank', 'b', 'a'])
         self.assertEqual(len(records), 27)
         self.assertEqual(sum(r['transcript'] == 'ba' for r in records), 5)

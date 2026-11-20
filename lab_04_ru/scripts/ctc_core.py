@@ -1,6 +1,7 @@
 """Small, independently enumerated CTC paths."""
 import itertools
 import math
+from itertools import combinations
 
 BLANK = 'blank'
 
@@ -23,9 +24,20 @@ def validate(emissions, alphabet, blank=BLANK):
             raise ValueError('emission row must sum to 1')
 
 
-def merge_then_remove(path, blank):
-    # напишите ваш код здесь
-    raise NotImplementedError('STUDENT: complete collapse')
+def merge_then_remove(path: list, blank: str):
+    if not path:
+        return ''
+
+    result = [path[0]]
+    for symbol in path[1:]:
+        if symbol != result[-1]:
+            result.append(symbol)
+
+    blank_count = result.count(blank)
+    for _ in range(blank_count):
+        result.remove(blank)
+
+    return ''.join(result)
 
 
 def collapse_path(path, blank=BLANK):
@@ -47,9 +59,12 @@ def enumerate_paths(emissions, alphabet, blank=BLANK):
     return records
 
 
-def sum_matching(records, target):
-    # напишите ваш код здесь
-    raise NotImplementedError('STUDENT: complete aggregate')
+def sum_matching(records: list[dict], target):
+    return sum(
+        record['probability']
+        for record in records
+        if record['transcript'] == target
+    )
 
 
 def sum_transcript_probability(records, target):

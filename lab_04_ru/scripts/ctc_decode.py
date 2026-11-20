@@ -3,8 +3,10 @@ from scripts.ctc_core import BLANK, collapse_path, validate
 
 
 def greedy_path(emissions, alphabet):
-    # напишите ваш код здесь
-    raise NotImplementedError('STUDENT: complete greedy')
+    return [
+        max(alphabet, key=lambda symbol: row[symbol])
+        for row in emissions
+    ]
 
 
 def greedy_decode(emissions, alphabet, blank=BLANK):
@@ -14,8 +16,23 @@ def greedy_decode(emissions, alphabet, blank=BLANK):
 
 
 def prefix_transitions(prefix, p_blank, p_nonblank, symbol, probability):
-    # напишите ваш код здесь
-    raise NotImplementedError('STUDENT: complete prefix')
+    if prefix and prefix[-1] == symbol:
+        # Путь закончился не на blank:
+        # повторный символ не добавляется
+        stay = (prefix, p_nonblank * probability)
+
+        # Путь закончился на blank:
+        # повторный символ добавляется
+        extend = (prefix + symbol, p_blank * probability)
+        return [stay, extend]
+
+    else:
+        # обе группы путей расширяют префикс
+        extend = (
+            prefix + symbol,
+            (p_blank + p_nonblank) * probability
+        )
+        return [extend]
 
 
 def prefix_beam_decode(emissions, alphabet, beam_width, blank=BLANK):

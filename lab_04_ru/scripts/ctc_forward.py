@@ -14,13 +14,27 @@ def extended_target(target, blank=BLANK):
 
 
 def incoming_sum(previous, extended, state, blank):
-    # напишите ваш код здесь
-    raise NotImplementedError('STUDENT: complete incoming')
+    stay_prob = 0
+    if state < len(previous):
+        stay_prob = previous[state]
+
+    back_one_prob = 0
+    if state >= 1:
+        back_one_prob = previous[state - 1]
+
+    back_two_prob = 0
+    if state >= 2:
+        if extended[state] != blank:
+            if extended[state] != extended[state - 2]:
+                back_two_prob = previous[state - 2]
+
+    return stay_prob + back_one_prob + back_two_prob
 
 
 def terminal_sum(last_row):
-    # напишите ваш код здесь
-    raise NotImplementedError('STUDENT: complete terminal')
+    if len(last_row) == 1:
+        return last_row[0]
+    return last_row[-2] + last_row[-1]
 
 
 def forward_table(emissions, target, blank=BLANK):
@@ -42,7 +56,7 @@ def forward_table(emissions, target, blank=BLANK):
     table = [first]
     for row in emissions[1:]:
         previous = table[-1]
-        table.append([row[symbol] * incoming_sum(previous, states, s, blank) for s, symbol in enumerate(states)])
+        table.append([row[symbol] * incoming_sum(previous, states, state_index, blank) for state_index, symbol in enumerate(states)])
     return table
 
 
